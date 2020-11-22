@@ -216,7 +216,7 @@ class Bplus_Tree(object):
         if(pointer.is_leaf()):
             pointer.node_set = left_pointer.node_set + pointer.node_set
         else:
-            pointer.key_set = left_pointer.key_set + pointer.pointer_set[0].find_min() + pointer.key_set
+            pointer.key_set = left_pointer.key_set + [pointer.pointer_set[0].find_min()] + pointer.key_set
             pointer.pointer_set = left_pointer.pointer_set + pointer.pointer_set
         del node.key_set[i-1]
         del node.pointer_set[i-1]
@@ -225,7 +225,7 @@ class Bplus_Tree(object):
         if(pointer.is_leaf()):
             pointer.node_set = pointer.node_set + right_pointer.node_set
         else:
-            pointer.key_set = pointer.key_set + right_pointer.pointer_set[0].find_min() + right_pointer.key_set
+            pointer.key_set = pointer.key_set + [right_pointer.pointer_set[0].find_min()] + right_pointer.key_set
             pointer.pointer_set = pointer.pointer_set + right_pointer.pointer_set
         del node.key_set[i]
         del node.pointer_set[i+1]         
@@ -269,18 +269,22 @@ class Bplus_Tree(object):
 
 if __name__ == "__main__":
     T = Bplus_Tree(3)
-    for i in range(0, 5):
-        T.insert(i**2,i)
-    for i in range(0, 4):
-        T.insert(i**2,i+2)
-    for i in range(2, 5):
-        T.insert(i**3,i+1)
-    for i in range(20, 25):
-        T.insert(i,i+1) 
-    for i in range(6, 12):
-        T.insert(i,i+6)   
-    T.delete(20) 
-    T.delete(4)
-    T.delete(27)
-    T.delete(64)
-    print(T.search(1))
+    # for i in range(0, 5):
+    #     T.insert(i**2,i)
+    # for i in range(0, 4):
+    #     T.insert(i**2,i+2)
+    # for i in range(2, 5):
+    #     T.insert(i**3,i+1)
+    # for i in range(20, 25):
+    #     T.insert(i,i+1) 
+    # for i in range(6, 12):
+    #     T.insert(i,i+6)   
+    # T.delete(20) 
+    # T.delete(4)
+    # T.delete(27)
+    # T.delete(64)
+    for i in range(0, 500):
+        T.insert(i, i**2)
+    for i in range(0, 480):
+        T.delete(i)
+    print(T.search(495))
