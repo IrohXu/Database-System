@@ -67,21 +67,11 @@ class hashing(object):
                 temp_key_value.append((head.key, head.value))
                 head = head.next
             print(str(dict_key)+':'+str(temp_key_value))
-
-
-
-
-if __name__ == '__main__':
-    h = hashing(10)
-    h.insert(5,20)
-    h.insert(15,23)
-    h.insert(3,98)
-    h.insert(3,92)
-    h.insert(23,98)
-    h.insert(45,125)
-    h.insert(10,125)
-    h.delete(15)
-    h.visualization()
-    print(h.search(15))
-
     
+    def search_all(self):
+        print("key | value")
+        for dict_key in self.dict:
+            head = self.dict[dict_key]
+            while(head != None):
+                print(str(head.key) + " | " + str(head.value))
+                head = head.next
