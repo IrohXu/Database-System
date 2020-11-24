@@ -214,16 +214,18 @@ class Bplus_Tree(object):
     
     def left_merge(self, node, i, pointer, left_pointer):
         if(pointer.is_leaf()):
-            pointer.node_set = left_pointer.node_set + pointer.node_set
+            left_pointer.node_set = left_pointer.node_set + pointer.node_set
+            left_pointer.brother = pointer.brother
         else:
-            pointer.key_set = left_pointer.key_set + [pointer.pointer_set[0].find_min()] + pointer.key_set
-            pointer.pointer_set = left_pointer.pointer_set + pointer.pointer_set
+            left_pointer.key_set = left_pointer.key_set + [pointer.pointer_set[0].find_min()] + pointer.key_set
+            left_pointer.pointer_set = left_pointer.pointer_set + pointer.pointer_set
         del node.key_set[i-1]
-        del node.pointer_set[i-1]
+        del node.pointer_set[i]
     
     def right_merge(self, node, i, pointer, right_pointer):
         if(pointer.is_leaf()):
             pointer.node_set = pointer.node_set + right_pointer.node_set
+            pointer.brother = right_pointer.brother
         else:
             pointer.key_set = pointer.key_set + [right_pointer.pointer_set[0].find_min()] + right_pointer.key_set
             pointer.pointer_set = pointer.pointer_set + right_pointer.pointer_set
@@ -255,36 +257,37 @@ class Bplus_Tree(object):
                         self.right_merge(node, i, pointer, right_pointer)
     
     def root_update(self, root):
-        if(root.is_leaf() == False):
-            if(root.size() == 1):
-                root = root.pointer_set[0]
-                root.parent = None
+        if(root.is_leaf() == False and root.size() == 1):
+            root = root.pointer_set[0]
+            root.parent = None
         return root
     
     def delete(self, key):
         node = self.root
         self._delete(key, node)
         self.root = self.root_update(node)
+    
+    def _vis(self, node):
+        if(node.is_leaf()):
+            for k_v in node.node_set:
+                print(k_v)
+        else:
+            for pointer in node.pointer_set:
+                self._vis(pointer)
+    
+    def visualization(self):
+        node = self.root
+        self._vis(node)
+    
+    def vis_leaf_node(self, node):
+        for k_v in node.node_set:
+            print(str(k_v[0]) + " | " + str(k_v[1]))
 
-
-if __name__ == "__main__":
-    T = Bplus_Tree(3)
-    # for i in range(0, 5):
-    #     T.insert(i**2,i)
-    # for i in range(0, 4):
-    #     T.insert(i**2,i+2)
-    # for i in range(2, 5):
-    #     T.insert(i**3,i+1)
-    # for i in range(20, 25):
-    #     T.insert(i,i+1) 
-    # for i in range(6, 12):
-    #     T.insert(i,i+6)   
-    # T.delete(20) 
-    # T.delete(4)
-    # T.delete(27)
-    # T.delete(64)
-    for i in range(0, 500):
-        T.insert(i, i**2)
-    for i in range(0, 480):
-        T.delete(i)
-    print(T.search(495))
+    def search_all(self):
+        node = self.root
+        print("Key | Value")
+        while(node.is_leaf() == False):
+            node = node.pointer_set[0]
+        while(node != None):
+            self.vis_leaf_node(node)
+            node = node.brother
