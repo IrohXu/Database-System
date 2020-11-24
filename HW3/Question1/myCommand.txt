@@ -1,0 +1,3 @@
+insert(3,98) 
+delete(5) 
+search(8)
